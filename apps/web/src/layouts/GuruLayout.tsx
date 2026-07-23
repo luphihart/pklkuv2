@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, FileCheck, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, LogOut, FileCheck, MapPin } from 'lucide-react';
 
 export const GuruLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -18,12 +18,12 @@ export const GuruLayout: React.FC = () => {
       <aside className="w-64 bg-slate-900 text-white flex flex-col justify-between p-4 flex-shrink-0">
         <div>
           <div className="flex items-center space-x-3 mb-8 px-2">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-bold text-lg shadow-md">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-lg shadow-md">
               PKL
             </div>
             <div>
               <h1 className="font-heading font-bold text-lg text-white leading-none">PKLku</h1>
-              <p className="text-xs text-slate-400 mt-0.5">Portal Guru Pembimbing</p>
+              <p className="text-xs text-slate-400 mt-0.5">Guru Pembimbing</p>
             </div>
           </div>
 
@@ -33,7 +33,7 @@ export const GuruLayout: React.FC = () => {
               end
               className={({ isActive }) =>
                 `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  isActive ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                  isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                 }`
               }
             >
@@ -45,12 +45,24 @@ export const GuruLayout: React.FC = () => {
               to="/guru/bimbingan"
               className={({ isActive }) =>
                 `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  isActive ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                  isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                 }`
               }
             >
               <Users className="w-5 h-5" />
-              <span>Murid Bimbingan</span>
+              <span>Siswa Bimbingan</span>
+            </NavLink>
+
+            <NavLink
+              to="/guru/kunjungan"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <MapPin className="w-5 h-5" />
+              <span>Log Kunjungan</span>
             </NavLink>
           </nav>
         </div>

@@ -8,6 +8,7 @@ import { IzinSakitModule } from './modules/izin-sakit/izin-sakit.module';
 import { PenilaianModule } from './modules/penilaian/penilaian.module';
 import { PenempatanModule } from './modules/penempatan/penempatan.module';
 import { LaporanModule } from './modules/laporan/laporan.module';
+import { KunjunganModule } from './modules/kunjungan/kunjungan.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LaporanModule } from './modules/laporan/laporan.module';
     PenilaianModule,
     PenempatanModule,
     LaporanModule,
+    KunjunganModule,
   ],
   controllers: [],
   providers: [],

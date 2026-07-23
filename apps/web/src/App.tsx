@@ -12,6 +12,7 @@ import { DudiListPage } from './features/master-data/DudiListPage';
 import { PenempatanPage } from './features/penempatan/PenempatanPage';
 import { GuruLayout } from './layouts/GuruLayout';
 import { GuruDashboard } from './features/dashboard/GuruDashboard';
+import { KunjunganPage } from './features/kunjungan/KunjunganPage';
 
 export const App: React.FC = () => {
   return (
@@ -39,6 +40,7 @@ export const App: React.FC = () => {
         <Route path="/guru" element={<GuruLayout />}>
           <Route index element={<GuruDashboard />} />
           <Route path="bimbingan" element={<GuruDashboard />} />
+          <Route path="kunjungan" element={<KunjunganPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

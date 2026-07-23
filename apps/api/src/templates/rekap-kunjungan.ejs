@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Rekap Kunjungan Monitoring Guru</title>
+  <style>
+    body { font-family: 'Times New Roman', Times, serif; margin: 30px; font-size: 13px; color: #111; }
+    .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 20px; }
+    .header h2 { margin: 0; font-size: 16px; text-transform: uppercase; }
+    .header p { margin: 3px 0; font-size: 12px; }
+    .table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .table th, .table td { border: 1px solid #000; padding: 6px 8px; text-align: left; }
+    .table th { background-color: #f0f0f0; text-align: center; font-size: 12px; }
+    .center { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>REKAPITULASI KUNJUNGAN MONITORING GURU PEMBIMBING PKL</h2>
+    <p>Guru Pembimbing: <strong><%= guruNama %></strong> (NIP: <%= nip || '-' %>)</p>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width: 6%;">No</th>
+        <th style="width: 15%;">Tanggal</th>
+        <th>Nama Siswa & Kelas</th>
+        <th>Lokasi DUDI</th>
+        <th>Jenis & Catatan Kunjungan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% list.forEach(function(item, idx) { %>
+        <tr>
+          <td class="center"><%= idx + 1 %></td>
+          <td class="center"><%= new Date(item.tanggal).toLocaleDateString('id-ID') %></td>
+          <td>
+            <strong><%= item.muridNama %></strong><br/>
+            <span style="font-size: 11px; color: #555;"><%= item.kelasNama %></span>
+          </td>
+          <td><%= item.dudiNama %></td>
+          <td>
+            <strong>[<%= item.jenisKunjungan %>]</strong><br/>
+            <%= item.deskripsiKunjungan %>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html>
