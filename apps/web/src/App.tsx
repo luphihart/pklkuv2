@@ -9,6 +9,7 @@ import { IzinPage } from './features/izin/IzinPage';
 import { AdminLayout } from './layouts/AdminLayout';
 import { AdminDashboard } from './features/dashboard/AdminDashboard';
 import { DudiListPage } from './features/master-data/DudiListPage';
+import { PenempatanPage } from './features/penempatan/PenempatanPage';
 import { GuruLayout } from './layouts/GuruLayout';
 import { GuruDashboard } from './features/dashboard/GuruDashboard';
 
@@ -30,6 +31,7 @@ export const App: React.FC = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="master-dudi" element={<DudiListPage />} />
+          <Route path="penempatan" element={<PenempatanPage />} />
           <Route path="presensi" element={<AdminDashboard />} />
         </Route>
 

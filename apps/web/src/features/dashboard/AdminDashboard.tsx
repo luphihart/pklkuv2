@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../lib/api-client';
 import { StatusBadge } from '../../components/shared/StatusBadge';
-import { Users, Building, CheckCircle2, MapPin } from 'lucide-react';
+import { Users, Building, CheckCircle2, MapPin, Download, FileSpreadsheet } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const [presensiList, setPresensiList] = useState<any[]>([]);
@@ -14,11 +14,37 @@ export const AdminDashboard: React.FC = () => {
     api.get('/master-data/murid').then((res) => setMuridList(res.data)).catch(() => {});
   }, []);
 
+  const handleExportPresensi = () => {
+    window.open(`${import.meta.env.VITE_API_BASE_URL || '/api'}/laporan/presensi/export`, '_blank');
+  };
+
+  const handleExportJurnal = () => {
+    window.open(`${import.meta.env.VITE_API_BASE_URL || '/api'}/laporan/jurnal/export`, '_blank');
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Dashboard Monitoring Admin</h1>
-        <p className="text-xs text-slate-500 mt-1">Ringkasan real-time aktivitas presensi dan data penempatan PKL.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-heading text-2xl font-bold text-slate-900">Dashboard Monitoring Admin</h1>
+          <p className="text-xs text-slate-500 mt-1">Ringkasan real-time aktivitas presensi dan data penempatan PKL.</p>
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={handleExportPresensi}
+            className="py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs shadow-xs flex items-center space-x-1.5"
+          >
+            <Download className="w-4 h-4" />
+            <span>Excel Presensi</span>
+          </button>
+          <button
+            onClick={handleExportJurnal}
+            className="py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs shadow-xs flex items-center space-x-1.5"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span>Excel Jurnal</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

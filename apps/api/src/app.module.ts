@@ -6,6 +6,8 @@ import { MasterDataModule } from './modules/master-data/master-data.module';
 import { JurnalModule } from './modules/jurnal/jurnal.module';
 import { IzinSakitModule } from './modules/izin-sakit/izin-sakit.module';
 import { PenilaianModule } from './modules/penilaian/penilaian.module';
+import { PenempatanModule } from './modules/penempatan/penempatan.module';
+import { LaporanModule } from './modules/laporan/laporan.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { PenilaianModule } from './modules/penilaian/penilaian.module';
     JurnalModule,
     IzinSakitModule,
     PenilaianModule,
+    PenempatanModule,
+    LaporanModule,
   ],
   controllers: [],
   providers: [],

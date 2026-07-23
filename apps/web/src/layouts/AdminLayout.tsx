@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Building, ShieldCheck, LogOut, FileSpreadsheet } from 'lucide-react';
+import { LayoutDashboard, Building, ShieldCheck, LogOut, FileSpreadsheet, Users } from 'lucide-react';
 
 export const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -51,6 +51,18 @@ export const AdminLayout: React.FC = () => {
             >
               <Building className="w-5 h-5" />
               <span>Master DUDI</span>
+            </NavLink>
+
+            <NavLink
+              to="/admin/penempatan"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Users className="w-5 h-5" />
+              <span>Plotting Penempatan</span>
             </NavLink>
 
             <NavLink
