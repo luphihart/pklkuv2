@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Rapor PKL — <%= muridNama %></title>
+  <style>
+    body { font-family: 'Times New Roman', Times, serif; margin: 30px; font-size: 13px; line-height: 1.4; color: #111; }
+    .header { text-align: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
+    .header h2 { margin: 0; font-size: 18px; text-transform: uppercase; }
+    .header h3 { margin: 3px 0; font-size: 16px; font-weight: normal; }
+    .header p { margin: 0; font-size: 11px; font-style: italic; }
+    .info-table { width: 100%; margin-bottom: 20px; border-collapse: collapse; }
+    .info-table td { padding: 4px 6px; vertical-align: top; }
+    .info-table td.label { width: 22%; font-weight: bold; }
+    .score-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .score-table th, .score-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; }
+    .score-table th { background-color: #f0f0f0; font-size: 12px; text-align: center; }
+    .center { text-align: center; }
+    .footer { margin-top: 40px; width: 100%; border-collapse: collapse; }
+    .footer td { width: 50%; text-align: center; vertical-align: top; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>LAPORAN PENILAIAN PRAKTEK KERJA LAPANGAN (PKL)</h2>
+    <h3>SMK NEGERI 1 INDONESIA</h3>
+    <p>Tahun Ajaran <%= tahunAjaran %> — Semester <%= semester %></p>
+  </div>
+
+  <table class="info-table">
+    <tr>
+      <td class="label">Nama Siswa</td>
+      <td>: <strong><%= muridNama %></strong></td>
+      <td class="label">NIS</td>
+      <td>: <%= nis %></td>
+    </tr>
+    <tr>
+      <td class="label">Kelas / Jurusan</td>
+      <td>: <%= kelasNama %> (<%= jurusanKode %>)</td>
+      <td class="label">Tempat PKL (DUDI)</td>
+      <td>: <%= dudiNama %></td>
+    </tr>
+    <tr>
+      <td class="label">Guru Pembimbing</td>
+      <td>: <%= guruNama %></td>
+      <td class="label">Pembimbing Industri</td>
+      <td>: <%= pembimbingIndustriNama || '-' %></td>
+    </tr>
+  </table>
+
+  <h4 style="margin-bottom: 8px;">A. PENILAIAN CAPAIAN KOMPETENSI</h4>
+  <table class="score-table">
+    <thead>
+      <tr>
+        <th style="width: 8%;">No</th>
+        <th>Tujuan Pembelajaran & Indikator Penilaian</th>
+        <th style="width: 15%;">Aspek</th>
+        <th style="width: 15%;">Nilai (0-100)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% indikatorList.forEach(function(ind, idx) { %>
+        <tr>
+          <td class="center"><%= idx + 1 %></td>
+          <td>
+            <strong><%= ind.tpNama %></strong><br/>
+            <span style="font-size: 11px; color: #444;"><%= ind.nama %></span>
+          </td>
+          <td class="center" style="text-transform: capitalize;"><%= ind.tipe %></td>
+          <td class="center font-bold"><%= ind.nilai || '-' %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <h4 style="margin-top: 20px; margin-bottom: 8px;">B. REKAPITULASI NILAI AKHIR</h4>
+  <table class="score-table" style="width: 60%;">
+    <tr>
+      <td>Rata-rata Aspek Sekolah (Guru)</td>
+      <td class="center" style="width: 30%;"><strong><%= rataNilaiGuru.toFixed(1) %></strong></td>
+    </tr>
+    <tr>
+      <td>Rata-rata Aspek Industri (DUDI)</td>
+      <td class="center"><strong><%= rataNilaiIndustri.toFixed(1) %></strong></td>
+    </tr>
+    <tr style="background-color: #f9f9f9; font-size: 14px;">
+      <td><strong>NILAI AKHIR PKL (40% Sekolah + 60% Industri)</strong></td>
+      <td class="center" style="color: #000;"><strong><%= nilaiAkhir.toFixed(1) %></strong></td>
+    </tr>
+  </table>
+
+  <div style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fafafa;">
+    <strong>Catatan & Rekomendasi Guru Pembimbing:</strong>
+    <p style="margin: 5px 0 0 0; font-style: italic;"><%= catatan || 'Siswa telah menyelesaikan kegiatan PKL dengan hasil yang memuaskan.' %></p>
+  </div>
+
+  <table class="footer">
+    <tr>
+      <td>
+        <p>Mengetahui,<br/>Pembimbing Industri</p>
+        <br/><br/><br/>
+        <p><strong><%= pembimbingIndustriNama || '(...................................)' %></strong></p>
+      </td>
+      <td>
+        <p>Guru Pembimbing PKL</p>
+        <br/><br/><br/>
+        <p><strong><%= guruNama %></strong></p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

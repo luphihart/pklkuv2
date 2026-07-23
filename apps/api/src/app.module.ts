@@ -3,9 +3,20 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PresensiModule } from './modules/presensi/presensi.module';
 import { MasterDataModule } from './modules/master-data/master-data.module';
+import { JurnalModule } from './modules/jurnal/jurnal.module';
+import { IzinSakitModule } from './modules/izin-sakit/izin-sakit.module';
+import { PenilaianModule } from './modules/penilaian/penilaian.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, PresensiModule, MasterDataModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    PresensiModule,
+    MasterDataModule,
+    JurnalModule,
+    IzinSakitModule,
+    PenilaianModule,
+  ],
   controllers: [],
   providers: [],
 })

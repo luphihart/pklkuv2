@@ -4,6 +4,8 @@ import { LoginPage } from './features/auth/LoginPage';
 import { MuridLayout } from './layouts/MuridLayout';
 import { MuridDashboard } from './features/dashboard/MuridDashboard';
 import { PresensiPage } from './features/presensi/PresensiPage';
+import { JurnalPage } from './features/jurnal/JurnalPage';
+import { IzinPage } from './features/izin/IzinPage';
 import { AdminLayout } from './layouts/AdminLayout';
 import { AdminDashboard } from './features/dashboard/AdminDashboard';
 import { DudiListPage } from './features/master-data/DudiListPage';
@@ -20,8 +22,8 @@ export const App: React.FC = () => {
         <Route path="/murid" element={<MuridLayout />}>
           <Route index element={<MuridDashboard />} />
           <Route path="presensi" element={<PresensiPage />} />
-          <Route path="jurnal" element={<div className="p-4 bg-white rounded-2xl border border-slate-200 text-sm">Modul Jurnal Harian</div>} />
-          <Route path="izin" element={<div className="p-4 bg-white rounded-2xl border border-slate-200 text-sm">Modul Pengajuan Izin / Sakit</div>} />
+          <Route path="jurnal" element={<JurnalPage />} />
+          <Route path="izin" element={<IzinPage />} />
         </Route>
 
         {/* Admin Routes */}
