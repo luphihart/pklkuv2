@@ -1,32 +1,18 @@
-# React + TypeScript + Vite
+# PKLku — Frontend Single Page Application (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Aplikasi web Single Page Application (SPA) untuk sistem **PKLku**, dibangun dengan React 18, Vite, TailwindCSS, dan shadcn/ui.
 
-Currently, two official plugins are available:
+## Fitur Utama Frontend:
+- **Mobile-First Student Interface**: Bottom tab bar navigasi jempol-friendly (`Home`, `Presensi`, `Jurnal`, `Izin`).
+- **Real-Time Camera & GPS Selfie**: Penangkapan foto selfie dengan indikator jarak GPS real-time ke lokasi DUDI (`CameraCapture.tsx`).
+- **Quick Login Demo**: Tombol masuk cepat untuk role Admin, Guru, dan Murid pada halaman Login.
+- **Admin & Guru Portals**: Dashboard monitoring presensi real-time, kelola DUDI, verifikasi jurnal & izin.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Perintah Pengembangan:
+```bash
+# Jalankan dev server Vite
+pnpm run dev
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+# Build produksi
+pnpm run build
 ```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
