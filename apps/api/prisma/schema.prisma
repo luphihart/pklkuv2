@@ -1,0 +1,402 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  admin
+  guru
+  murid
+}
+
+enum Semester {
+  ganjil
+  genap
+}
+
+enum StatusTahunAjaran {
+  aktif
+  nonaktif
+}
+
+enum StatusPenempatan {
+  aktif
+  selesai
+  batal
+}
+
+enum StatusMasuk {
+  tepat_waktu
+  terlambat
+}
+
+enum StatusPulang {
+  pulang_cepat
+  tepat_waktu
+}
+
+enum StatusApproval {
+  pending
+  disetujui
+  ditolak
+}
+
+enum TipeIzin {
+  izin
+  sakit
+}
+
+enum TipeIndikator {
+  guru
+  industri
+}
+
+model User {
+  id                 BigInt    @id @default(autoincrement())
+  name               String    @db.VarChar(255)
+  email              String    @unique @db.VarChar(255)
+  email_verified_at  DateTime? @db.Timestamp()
+  password           String    @db.VarChar(255)
+  role               Role
+  phone              String?   @db.VarChar(20)
+  photo              String?   @db.VarChar(255)
+  tanggal_lahir      DateTime? @db.Date
+  refresh_token_hash String?   @db.VarChar(255)
+  created_at         DateTime? @default(now()) @db.Timestamp()
+  updated_at         DateTime? @updatedAt @db.Timestamp()
+  deleted_at         DateTime? @db.Timestamp()
+
+  guru               Guru?
+  murid              Murid?
+  pengumuman_penulis Pengumuman[]         @relation("PenulisPengumuman")
+  pengumuman_penerima PengumumanPenerima[]
+  audit_logs         AuditLog[]
+
+  @@map("users")
+}
+
+model TahunAjaran {
+  id         BigInt            @id @default(autoincrement())
+  tahun      String            @db.VarChar(20)
+  semester   Semester
+  status     StatusTahunAjaran @default(nonaktif)
+  created_at DateTime?         @default(now()) @db.Timestamp()
+  updated_at DateTime?         @updatedAt @db.Timestamp()
+  deleted_at DateTime?         @db.Timestamp()
+
+  penempatan_pkl PenempatanPkl[]
+
+  @@map("tahun_ajaran")
+}
+
+model Jurusan {
+  id         BigInt    @id @default(autoincrement())
+  kode       String    @unique @db.VarChar(20)
+  nama       String    @db.VarChar(255)
+  singkatan  String?   @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+  deleted_at DateTime? @db.Timestamp()
+
+  kelas Kelas[]
+
+  @@map("jurusan")
+}
+
+model Kelas {
+  id         BigInt    @id @default(autoincrement())
+  jurusan_id BigInt
+  nama       String    @db.VarChar(100)
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+  deleted_at DateTime? @db.Timestamp()
+
+  jurusan Jurusan @relation(fields: [jurusan_id], references: [id], onDelete: Cascade)
+  murid   Murid[]
+
+  @@map("kelas")
+}
+
+model Guru {
+  id         BigInt    @id @default(autoincrement())
+  user_id    BigInt    @unique
+  nip        String?   @unique @db.VarChar(50)
+  nama       String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+  deleted_at DateTime? @db.Timestamp()
+
+  user                  User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  penempatan_pkl        PenempatanPkl[]
+  approved_izin_sakit   IzinSakit[]     @relation("ApprovedGuruIzin")
+  verified_jurnal       Jurnal[]        @relation("VerifiedGuruJurnal")
+
+  @@map("guru")
+}
+
+model Murid {
+  id         BigInt    @id @default(autoincrement())
+  user_id    BigInt    @unique
+  kelas_id   BigInt
+  nis        String    @unique @db.VarChar(50)
+  nama       String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+  deleted_at DateTime? @db.Timestamp()
+
+  user           User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  kelas          Kelas           @relation(fields: [kelas_id], references: [id], onDelete: Cascade)
+  penempatan_pkl PenempatanPkl[]
+
+  @@map("murid")
+}
+
+model Dudi {
+  id           BigInt    @id @default(autoincrement())
+  nama         String    @db.VarChar(255)
+  alamat       String?   @db.Text
+  latitude     Float
+  longitude    Float
+  radius_meter Int       @default(50)
+  pic_nama     String?   @db.VarChar(255)
+  pic_phone    String?   @db.VarChar(20)
+  hari_kerja   String    @default("Senin,Selasa,Rabu,Kamis,Jumat") @db.VarChar(255)
+  created_at   DateTime? @default(now()) @db.Timestamp()
+  updated_at   DateTime? @updatedAt @db.Timestamp()
+  deleted_at   DateTime? @db.Timestamp()
+
+  pembimbing_industri PembimbingIndustri[]
+  penempatan_pkl      PenempatanPkl[]
+
+  @@map("dudi")
+}
+
+model PembimbingIndustri {
+  id         BigInt    @id @default(autoincrement())
+  dudi_id    BigInt
+  nama       String    @db.VarChar(255)
+  phone      String?   @db.VarChar(20)
+  email      String?   @db.VarChar(100)
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+  deleted_at DateTime? @db.Timestamp()
+
+  dudi           Dudi            @relation(fields: [dudi_id], references: [id], onDelete: Cascade)
+  penempatan_pkl PenempatanPkl[]
+
+  @@map("pembimbing_industri")
+}
+
+model PenempatanPkl {
+  id                     BigInt           @id @default(autoincrement())
+  murid_id               BigInt
+  dudi_id                BigInt
+  guru_id                BigInt
+  pembimbing_industri_id BigInt?
+  tahun_ajaran_id        BigInt
+  tanggal_mulai          DateTime         @db.Date
+  tanggal_selesai        DateTime         @db.Date
+  status                 StatusPenempatan @default(aktif)
+  created_at             DateTime?        @default(now()) @db.Timestamp()
+  updated_at             DateTime?        @updatedAt @db.Timestamp()
+  deleted_at             DateTime?        @db.Timestamp()
+
+  murid               Murid               @relation(fields: [murid_id], references: [id], onDelete: Cascade)
+  dudi                Dudi                @relation(fields: [dudi_id], references: [id], onDelete: Cascade)
+  guru                Guru                @relation(fields: [guru_id], references: [id], onDelete: Cascade)
+  pembimbing_industri PembimbingIndustri? @relation(fields: [pembimbing_industri_id], references: [id], onDelete: SetNull)
+  tahun_ajaran        TahunAjaran         @relation(fields: [tahun_ajaran_id], references: [id], onDelete: Cascade)
+
+  presensi             Presensi[]
+  izin_sakit           IzinSakit[]
+  jurnal               Jurnal[]
+  kunjungan_monitoring KunjunganMonitoring[]
+  penilaian_pkl        PenilaianPkl?
+
+  @@index([murid_id, status])
+  @@index([guru_id, status])
+  @@map("penempatan_pkl")
+}
+
+model Presensi {
+  id                BigInt            @id @default(autoincrement())
+  penempatan_pkl_id BigInt
+  tanggal           DateTime          @db.Date
+  jam_masuk         DateTime?         @db.Time()
+  jam_pulang        DateTime?         @db.Time()
+  lat_masuk         Float?
+  lng_masuk         Float?
+  lat_pulang        Float?
+  lng_pulang        Float?
+  foto_masuk        String?           @db.VarChar(255)
+  foto_pulang       String?           @db.VarChar(255)
+  status_masuk      StatusMasuk?
+  status_pulang     StatusPulang?
+  created_at        DateTime?         @default(now()) @db.Timestamp()
+  updated_at        DateTime?         @updatedAt @db.Timestamp()
+
+  penempatan_pkl PenempatanPkl @relation(fields: [penempatan_pkl_id], references: [id], onDelete: Cascade)
+
+  @@unique([penempatan_pkl_id, tanggal])
+  @@map("presensi")
+}
+
+model IzinSakit {
+  id                BigInt         @id @default(autoincrement())
+  penempatan_pkl_id BigInt
+  tanggal_mulai     DateTime       @db.Date
+  tanggal_selesai   DateTime       @db.Date
+  tipe              TipeIzin
+  alasan            String         @db.Text
+  surat_pendukung   String?        @db.VarChar(255)
+  status_approval   StatusApproval @default(pending)
+  catatan_guru      String?        @db.Text
+  approved_by       BigInt?
+  created_at        DateTime?      @default(now()) @db.Timestamp()
+  updated_at        DateTime?      @updatedAt @db.Timestamp()
+
+  penempatan_pkl PenempatanPkl @relation(fields: [penempatan_pkl_id], references: [id], onDelete: Cascade)
+  guru_approver  Guru?         @relation("ApprovedGuruIzin", fields: [approved_by], references: [id], onDelete: SetNull)
+
+  @@index([penempatan_pkl_id, tanggal_mulai])
+  @@map("izin_sakit")
+}
+
+model Jurnal {
+  id                  BigInt         @id @default(autoincrement())
+  penempatan_pkl_id  BigInt
+  tanggal             DateTime       @db.Date
+  deskripsi_aktivitas String         @db.Text
+  foto_kegiatan       String?        @db.VarChar(255)
+  status_verifikasi   StatusApproval @default(pending)
+  catatan_verifikasi  String?        @db.Text
+  verified_by         BigInt?
+  created_at          DateTime?      @default(now()) @db.Timestamp()
+  updated_at          DateTime?      @updatedAt @db.Timestamp()
+
+  penempatan_pkl PenempatanPkl @relation(fields: [penempatan_pkl_id], references: [id], onDelete: Cascade)
+  guru_verifier  Guru?         @relation("VerifiedGuruJurnal", fields: [verified_by], references: [id], onDelete: SetNull)
+
+  @@index([penempatan_pkl_id, tanggal])
+  @@map("jurnal")
+}
+
+model KunjunganMonitoring {
+  id                  BigInt    @id @default(autoincrement())
+  penempatan_pkl_id  BigInt
+  tanggal             DateTime  @db.Date
+  jenis_kunjungan     String    @default("Monitoring Berkala") @db.VarChar(255)
+  deskripsi_kunjungan String    @db.Text
+  foto_kunjungan      String?   @db.VarChar(255)
+  latitude            Float?
+  longitude           Float?
+  created_at          DateTime? @default(now()) @db.Timestamp()
+  updated_at          DateTime? @updatedAt @db.Timestamp()
+
+  penempatan_pkl PenempatanPkl @relation(fields: [penempatan_pkl_id], references: [id], onDelete: Cascade)
+
+  @@index([penempatan_pkl_id, tanggal])
+  @@map("kunjungan_monitoring")
+}
+
+model TujuanPembelajaran {
+  id         BigInt    @id @default(autoincrement())
+  nomor      Int
+  nama       String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+
+  indikator_penilaian IndikatorPenilaian[]
+
+  @@map("tujuan_pembelajaran")
+}
+
+model IndikatorPenilaian {
+  id                     BigInt        @id @default(autoincrement())
+  tujuan_pembelajaran_id BigInt
+  nomor_urut             String        @db.VarChar(10)
+  nama                   String        @db.VarChar(255)
+  deskripsi              String?       @db.Text
+  tipe                   TipeIndikator @default(guru)
+  created_at             DateTime?     @default(now()) @db.Timestamp()
+  updated_at             DateTime?     @updatedAt @db.Timestamp()
+
+  tujuan_pembelajaran TujuanPembelajaran @relation(fields: [tujuan_pembelajaran_id], references: [id], onDelete: Cascade)
+
+  @@map("indikator_penilaian")
+}
+
+model PenilaianPkl {
+  id                  BigInt    @id @default(autoincrement())
+  penempatan_pkl_id   BigInt    @unique
+  nilai_guru_json     Json?
+  nilai_industri_json Json?
+  rata_nilai_guru     Float     @default(0)
+  rata_nilai_industri Float     @default(0)
+  nilai_akhir         Float     @default(0)
+  catatan             String?   @db.Text
+  keterangan_tp_json  Json?
+  created_at          DateTime? @default(now()) @db.Timestamp()
+  updated_at          DateTime? @updatedAt @db.Timestamp()
+
+  penempatan_pkl PenempatanPkl @relation(fields: [penempatan_pkl_id], references: [id], onDelete: Cascade)
+
+  @@map("penilaian_pkl")
+}
+
+model Pengumuman {
+  id         BigInt    @id @default(autoincrement())
+  judul      String    @db.VarChar(255)
+  isi        String    @db.Text
+  penulis_id BigInt
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+
+  penulis  User                 @relation("PenulisPengumuman", fields: [penulis_id], references: [id])
+  penerima PengumumanPenerima[]
+
+  @@map("pengumuman")
+}
+
+model PengumumanPenerima {
+  id            BigInt    @id @default(autoincrement())
+  pengumuman_id BigInt
+  user_id       BigInt
+  is_read       Boolean   @default(false)
+  read_at       DateTime? @db.Timestamp()
+
+  pengumuman Pengumuman @relation(fields: [pengumuman_id], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([pengumuman_id, user_id])
+  @@map("pengumuman_penerima")
+}
+
+model Settings {
+  id         BigInt    @id @default(autoincrement())
+  key        String    @unique @db.VarChar(255)
+  value      String?   @db.Text
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+
+  @@map("settings")
+}
+
+model AuditLog {
+  id         BigInt    @id @default(autoincrement())
+  user_id    BigInt?
+  aktivitas  String    @db.VarChar(255)
+  ip_address String?   @db.VarChar(45)
+  user_agent String?   @db.Text
+  payload    Json?
+  created_at DateTime? @default(now()) @db.Timestamp()
+  updated_at DateTime? @updatedAt @db.Timestamp()
+
+  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
