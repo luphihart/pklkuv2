@@ -8,12 +8,14 @@ import { JurnalPage } from './features/jurnal/JurnalPage';
 import { IzinPage } from './features/izin/IzinPage';
 import { AdminLayout } from './layouts/AdminLayout';
 import { AdminDashboard } from './features/dashboard/AdminDashboard';
+import { AdminPresensiPage } from './features/dashboard/AdminPresensiPage';
 import { DudiListPage } from './features/master-data/DudiListPage';
 import { PenempatanPage } from './features/penempatan/PenempatanPage';
 import { PengumumanPage } from './features/pengumuman/PengumumanPage';
 import { SettingsPage } from './features/settings/SettingsPage';
 import { GuruLayout } from './layouts/GuruLayout';
 import { GuruDashboard } from './features/dashboard/GuruDashboard';
+import { BimbinganPage } from './features/guru/BimbinganPage';
 import { KunjunganPage } from './features/kunjungan/KunjunganPage';
 
 export const App: React.FC = () => {
@@ -35,7 +37,7 @@ export const App: React.FC = () => {
           <Route index element={<AdminDashboard />} />
           <Route path="master-dudi" element={<DudiListPage />} />
           <Route path="penempatan" element={<PenempatanPage />} />
-          <Route path="presensi" element={<AdminDashboard />} />
+          <Route path="presensi" element={<AdminPresensiPage />} />
           <Route path="pengumuman" element={<PengumumanPage />} />
           <Route path="pengaturan" element={<SettingsPage />} />
         </Route>
@@ -43,7 +45,7 @@ export const App: React.FC = () => {
         {/* Guru Routes */}
         <Route path="/guru" element={<GuruLayout />}>
           <Route index element={<GuruDashboard />} />
-          <Route path="bimbingan" element={<GuruDashboard />} />
+          <Route path="bimbingan" element={<BimbinganPage />} />
           <Route path="kunjungan" element={<KunjunganPage />} />
         </Route>
 

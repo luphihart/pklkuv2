@@ -14,18 +14,18 @@ export class PengumumanController {
 
   @Roles(Role.admin)
   @Post()
-  create(@CurrentUser('userId') userId: number, @Body() dto: CreatePengumumanDto) {
+  create(@CurrentUser('id') userId: number, @Body() dto: CreatePengumumanDto) {
     return this.pengumumanService.create(userId, dto);
   }
 
   @Get()
-  findAllForUser(@CurrentUser('userId') userId: number) {
+  findAllForUser(@CurrentUser('id') userId: number) {
     return this.pengumumanService.findAllForUser(userId);
   }
 
   @Patch(':id/read')
   markAsRead(
-    @CurrentUser('userId') userId: number,
+    @CurrentUser('id') userId: number,
     @Param('id', ParseIntPipe) pengumumanId: number,
   ) {
     return this.pengumumanService.markAsRead(userId, pengumumanId);

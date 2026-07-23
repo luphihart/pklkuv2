@@ -35,7 +35,7 @@ async function main() {
   });
 
   const guru1 = await prisma.guru.upsert({
-    where: { user_id: adminUser.id ? guru1User.id : guru1User.id },
+    where: { user_id: guru1User.id },
     update: {},
     create: {
       user_id: guru1User.id,
@@ -87,12 +87,17 @@ async function main() {
     },
   });
 
-  const kelasRpl1 = await prisma.kelas.create({
-    data: {
-      jurusan_id: jurusanRpl.id,
-      nama: 'XII RPL 1',
-    },
+  let kelasRpl1 = await prisma.kelas.findFirst({
+    where: { jurusan_id: jurusanRpl.id, nama: 'XII RPL 1' },
   });
+  if (!kelasRpl1) {
+    kelasRpl1 = await prisma.kelas.create({
+      data: {
+        jurusan_id: jurusanRpl.id,
+        nama: 'XII RPL 1',
+      },
+    });
+  }
 
   // 4. Students
   const murid1User = await prisma.user.upsert({
@@ -142,95 +147,129 @@ async function main() {
   });
 
   // 5. DUDI & Pembimbing Industri
-  const dudi1 = await prisma.dudi.create({
-    data: {
-      nama: 'PT Teknologi Nusantara',
-      alamat: 'Jl. Jendral Sudirman No. 45, Jakarta Selatan',
-      latitude: -6.2088,
-      longitude: 106.8456,
-      radius_meter: 100,
-      pic_nama: 'Hendra Wijaya',
-      pic_phone: '081122334455',
-      hari_kerja: 'Senin,Selasa,Rabu,Kamis,Jumat',
-    },
-  });
+  let dudi1 = await prisma.dudi.findFirst({ where: { nama: 'PT Teknologi Nusantara' } });
+  if (!dudi1) {
+    dudi1 = await prisma.dudi.create({
+      data: {
+        nama: 'PT Teknologi Nusantara',
+        alamat: 'Jl. Jendral Sudirman No. 45, Jakarta Selatan',
+        latitude: -6.2088,
+        longitude: 106.8456,
+        radius_meter: 100,
+        pic_nama: 'Hendra Wijaya',
+        pic_phone: '081122334455',
+        hari_kerja: 'Senin,Selasa,Rabu,Kamis,Jumat',
+      },
+    });
+  }
 
-  const pembimbing1 = await prisma.pembimbingIndustri.create({
-    data: {
-      dudi_id: dudi1.id,
-      nama: 'Hendra Wijaya',
-      phone: '081122334455',
-      email: 'hendra@teknus.co.id',
-    },
+  let pembimbing1 = await prisma.pembimbingIndustri.findFirst({
+    where: { dudi_id: dudi1.id, nama: 'Hendra Wijaya' },
   });
+  if (!pembimbing1) {
+    pembimbing1 = await prisma.pembimbingIndustri.create({
+      data: {
+        dudi_id: dudi1.id,
+        nama: 'Hendra Wijaya',
+        phone: '081122334455',
+        email: 'hendra@teknus.co.id',
+      },
+    });
+  }
 
   // 6. Tahun Ajaran
-  const ta2026 = await prisma.tahunAjaran.create({
-    data: {
-      tahun: '2025/2026',
-      semester: Semester.ganjil,
-      status: StatusTahunAjaran.aktif,
-    },
-  });
+  let ta2026 = await prisma.tahunAjaran.findFirst({ where: { tahun: '2025/2026', semester: Semester.ganjil } });
+  if (!ta2026) {
+    ta2026 = await prisma.tahunAjaran.create({
+      data: {
+        tahun: '2025/2026',
+        semester: Semester.ganjil,
+        status: StatusTahunAjaran.aktif,
+      },
+    });
+  }
 
   // 7. Penempatan PKL
-  const penempatan1 = await prisma.penempatanPkl.create({
-    data: {
-      murid_id: murid1.id,
-      dudi_id: dudi1.id,
-      guru_id: guru1.id,
-      pembimbing_industri_id: pembimbing1.id,
-      tahun_ajaran_id: ta2026.id,
-      tanggal_mulai: new Date('2026-07-01'),
-      tanggal_selesai: new Date('2026-12-31'),
-      status: StatusPenempatan.aktif,
-    },
+  let penempatan1 = await prisma.penempatanPkl.findFirst({
+    where: { murid_id: murid1.id, tahun_ajaran_id: ta2026.id },
   });
+  if (!penempatan1) {
+    penempatan1 = await prisma.penempatanPkl.create({
+      data: {
+        murid_id: murid1.id,
+        dudi_id: dudi1.id,
+        guru_id: guru1.id,
+        pembimbing_industri_id: pembimbing1.id,
+        tahun_ajaran_id: ta2026.id,
+        tanggal_mulai: new Date('2026-07-01'),
+        tanggal_selesai: new Date('2026-12-31'),
+        status: StatusPenempatan.aktif,
+      },
+    });
+  }
 
   // 8. Presensi Sample
-  await prisma.presensi.create({
-    data: {
-      penempatan_pkl_id: penempatan1.id,
-      tanggal: new Date('2026-07-23'),
-      jam_masuk: new Date('2026-07-23T07:45:00'),
-      jam_pulang: new Date('2026-07-23T16:00:00'),
-      lat_masuk: -6.2088,
-      lng_masuk: 106.8456,
-      lat_pulang: -6.2088,
-      lng_pulang: 106.8456,
-      status_masuk: StatusMasuk.tepat_waktu,
-      status_pulang: StatusPulang.tepat_waktu,
-    },
+  const sampleDate = new Date('2026-07-23');
+  const existingPresensi = await prisma.presensi.findUnique({
+    where: { penempatan_pkl_id_tanggal: { penempatan_pkl_id: penempatan1.id, tanggal: sampleDate } },
   });
+  if (!existingPresensi) {
+    await prisma.presensi.create({
+      data: {
+        penempatan_pkl_id: penempatan1.id,
+        tanggal: sampleDate,
+        jam_masuk: new Date('2026-07-23T07:45:00'),
+        jam_pulang: new Date('2026-07-23T16:00:00'),
+        lat_masuk: -6.2088,
+        lng_masuk: 106.8456,
+        lat_pulang: -6.2088,
+        lng_pulang: 106.8456,
+        status_masuk: StatusMasuk.tepat_waktu,
+        status_pulang: StatusPulang.tepat_waktu,
+      },
+    });
+  }
 
   // 9. Jurnal Sample
-  await prisma.jurnal.create({
-    data: {
-      penempatan_pkl_id: penempatan1.id,
-      tanggal: new Date('2026-07-23'),
-      deskripsi_aktivitas: 'Mempelajari arsitektur backend NestJS dan membuat REST API endpoint untuk modul autentikasi.',
-      status_verifikasi: StatusApproval.disetujui,
-      catatan_verifikasi: 'Aktivitas bagus, pertahankan progres.',
-      verified_by: guru1.id,
-    },
+  const existingJurnal = await prisma.jurnal.findFirst({
+    where: { penempatan_pkl_id: penempatan1.id, tanggal: sampleDate },
   });
+  if (!existingJurnal) {
+    await prisma.jurnal.create({
+      data: {
+        penempatan_pkl_id: penempatan1.id,
+        tanggal: sampleDate,
+        deskripsi_aktivitas: 'Mempelajari arsitektur backend NestJS dan membuat REST API endpoint untuk modul autentikasi.',
+        status_verifikasi: StatusApproval.disetujui,
+        catatan_verifikasi: 'Aktivitas bagus, pertahankan progres.',
+        verified_by: guru1.id,
+      },
+    });
+  }
 
   // 10. Default Learning Objectives (Tujuan Pembelajaran)
-  const tp1 = await prisma.tujuanPembelajaran.create({
-    data: {
-      nomor: 1,
-      nama: 'Penerapan Etika Kerja dan Disiplin Industri',
-    },
-  });
+  let tp1 = await prisma.tujuanPembelajaran.findFirst({ where: { nomor: 1 } });
+  if (!tp1) {
+    tp1 = await prisma.tujuanPembelajaran.create({
+      data: {
+        nomor: 1,
+        nama: 'Penerapan Etika Kerja dan Disiplin Industri',
+      },
+    });
+  }
 
-  const tp2 = await prisma.tujuanPembelajaran.create({
-    data: {
-      nomor: 2,
-      nama: 'Penguasaan Kompetensi Teknis Keahlian',
-    },
-  });
+  let tp2 = await prisma.tujuanPembelajaran.findFirst({ where: { nomor: 2 } });
+  if (!tp2) {
+    tp2 = await prisma.tujuanPembelajaran.create({
+      data: {
+        nomor: 2,
+        nama: 'Penguasaan Kompetensi Teknis Keahlian',
+      },
+    });
+  }
 
   await prisma.indikatorPenilaian.createMany({
+    skipDuplicates: true,
     data: [
       {
         tujuan_pembelajaran_id: tp1.id,
@@ -258,6 +297,7 @@ async function main() {
 
   // 11. System Settings
   await prisma.settings.createMany({
+    skipDuplicates: true,
     data: [
       { key: 'nama_sekolah', value: 'SMK Negeri 1 Indonesia' },
       { key: 'jam_masuk_default', value: '08:00' },
