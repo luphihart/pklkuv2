@@ -9,6 +9,8 @@ import { PenilaianModule } from './modules/penilaian/penilaian.module';
 import { PenempatanModule } from './modules/penempatan/penempatan.module';
 import { LaporanModule } from './modules/laporan/laporan.module';
 import { KunjunganModule } from './modules/kunjungan/kunjungan.module';
+import { PengumumanModule } from './modules/pengumuman/pengumuman.module';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { KunjunganModule } from './modules/kunjungan/kunjungan.module';
     PenempatanModule,
     LaporanModule,
     KunjunganModule,
+    PengumumanModule,
+    SettingsModule,
   ],
   controllers: [],
   providers: [],

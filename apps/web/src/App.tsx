@@ -10,6 +10,8 @@ import { AdminLayout } from './layouts/AdminLayout';
 import { AdminDashboard } from './features/dashboard/AdminDashboard';
 import { DudiListPage } from './features/master-data/DudiListPage';
 import { PenempatanPage } from './features/penempatan/PenempatanPage';
+import { PengumumanPage } from './features/pengumuman/PengumumanPage';
+import { SettingsPage } from './features/settings/SettingsPage';
 import { GuruLayout } from './layouts/GuruLayout';
 import { GuruDashboard } from './features/dashboard/GuruDashboard';
 import { KunjunganPage } from './features/kunjungan/KunjunganPage';
@@ -34,6 +36,8 @@ export const App: React.FC = () => {
           <Route path="master-dudi" element={<DudiListPage />} />
           <Route path="penempatan" element={<PenempatanPage />} />
           <Route path="presensi" element={<AdminDashboard />} />
+          <Route path="pengumuman" element={<PengumumanPage />} />
+          <Route path="pengaturan" element={<SettingsPage />} />
         </Route>
 
         {/* Guru Routes */}

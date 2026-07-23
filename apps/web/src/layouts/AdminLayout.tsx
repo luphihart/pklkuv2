@@ -76,6 +76,28 @@ export const AdminLayout: React.FC = () => {
               <FileSpreadsheet className="w-5 h-5" />
               <span>Rekap Presensi</span>
             </NavLink>
+            <NavLink
+              to="/admin/pengumuman"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <FileSpreadsheet className="w-5 h-5" />
+              <span>Pengumuman</span>
+            </NavLink>
+            <NavLink
+              to="/admin/pengaturan"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  isActive ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <FileSpreadsheet className="w-5 h-5" />
+              <span>Pengaturan</span>
+            </NavLink>
           </nav>
         </div>
 
